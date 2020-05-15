@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"fmt"
 	"strings"
 	"sync"
 
@@ -25,14 +26,18 @@ type animeSong struct {
 	Notes    string
 }
 
-func GetAnimeList() []Anime {
+// List is the struct wihich contains all the animes
+type List []Anime
+
+//GetAnimeList returns an array of the Anime struct with all anime loaded
+func GetAnimeList() List {
 	c := colly.NewCollector()
 	d := colly.NewCollector()
 
 	count := 0
 
 	var wg sync.WaitGroup
-	var animeList []Anime
+	var animeList List
 
 	c.OnHTML("div.md.wiki", func(e *colly.HTMLElement) {
 
@@ -72,26 +77,28 @@ func GetAnimeList() []Anime {
 				title := row.Eq(0)
 				//fmt.Println(title.Text(), "is a song of", temp.NameEng)
 				if title.Text() != "" {
-					songs.Title = substr(title.Text(), strings.Index(title.Text(), `"`)+1) //len(title.Text())-1)
+					songs.Title = getTitle(title.Text()) //len(title.Text())-1)
 					tempNameSong = songs.Title
 				} else {
 					songs.Title = tempNameSong
 				}
-				songs.Version = strings.Replace(title.Text(), `"`+songs.Title+`"`, "", -1)
-				link := title.Next()
-				songs.Link, _ = link.Children().Attr("href")
-				eps := link.Next()
-				songs.Episodes = eps.Text()
-				notes := eps.Next()
-				songs.Notes = notes.Text()
+				if row.Find("a").Length() != 0 {
+					songs.Version = strings.Replace(title.Text(), `"`+songs.Title+`"`, "", -1)
+					link := title.Next()
+					songs.Link, _ = link.Children().Attr("href")
+					eps := link.Next()
+					songs.Episodes = eps.Text()
+					notes := eps.Next()
+					songs.Notes = notes.Text()
 
-				temp.Songs = append(temp.Songs, songs)
+					temp.Songs = append(temp.Songs, songs)
+				}
 			}
 			animeList = append(animeList, temp)
 		}
 
 		wg.Done()
-		//fmt.Println(count)
+		fmt.Println(count)
 	})
 
 	c.Visit("https://reddit.com/r/AnimeThemes/wiki/anime_index")
@@ -100,9 +107,42 @@ func GetAnimeList() []Anime {
 	return animeList
 }
 
-func substr(a string, b int) string {
+func getTitle(a string) string {
 	d := []rune(a)
-	// fmt.Printf("%d  %d \n", len(d), len(a))
-	// fmt.Println(string(d), string(a))
-	return string(d[b : len(d)-1])
+	return string(d[strings.Index(a, `"`)+1 : len(d)-1])
+}
+
+// SelectByJapName will find all the anime which contains the string in the japanese name
+func (list List) SelectByJapName(name string) List {
+	var newList List
+	for i := range list {
+		if strings.Contains(strings.ToLower(list[i].NameJap), name) {
+			newList = append(newList, list[i])
+		}
+	}
+	return newList
+}
+
+// SelectByEngName will find all the anime which contains the string in the english name
+func (list List) SelectByEngName(name string) List {
+	var newList List
+	for i := range list {
+		if strings.Contains(strings.ToLower(list[i].NameEng), name) {
+			newList = append(newList, list[i])
+		}
+	}
+	return newList
+}
+
+// SelectByBothNames will find all the anime which contains the string in the japanese or english name
+func (list List) SelectByBothNames(name string) List {
+	var newList List
+	for i := range list {
+		if strings.Contains(strings.ToLower(list[i].NameEng), name) {
+			newList = append(newList, list[i])
+		} else if strings.Contains(strings.ToLower(list[i].NameEng), name) {
+			newList = append(newList, list[i])
+		}
+	}
+	return newList
 }
