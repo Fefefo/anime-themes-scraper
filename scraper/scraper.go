@@ -116,7 +116,7 @@ func getTitle(a string) string {
 func (list List) SelectByJapName(name string) List {
 	var newList List
 	for i := range list {
-		if strings.Contains(strings.ToLower(list[i].NameJap), name) {
+		if strings.Contains(strings.ToLower(list[i].NameJap), strings.ToLower(name)) {
 			newList = append(newList, list[i])
 		}
 	}
@@ -127,7 +127,7 @@ func (list List) SelectByJapName(name string) List {
 func (list List) SelectByEngName(name string) List {
 	var newList List
 	for i := range list {
-		if strings.Contains(strings.ToLower(list[i].NameEng), name) {
+		if strings.Contains(strings.ToLower(list[i].NameEng), strings.ToLower(name)) {
 			newList = append(newList, list[i])
 		}
 	}
@@ -138,9 +138,9 @@ func (list List) SelectByEngName(name string) List {
 func (list List) SelectByBothNames(name string) List {
 	var newList List
 	for i := range list {
-		if strings.Contains(strings.ToLower(list[i].NameEng), name) {
+		if strings.Contains(strings.ToLower(list[i].NameEng), strings.ToLower(name)) {
 			newList = append(newList, list[i])
-		} else if strings.Contains(strings.ToLower(list[i].NameEng), name) {
+		} else if strings.Contains(strings.ToLower(list[i].NameEng), strings.ToLower(name)) {
 			newList = append(newList, list[i])
 		}
 	}
