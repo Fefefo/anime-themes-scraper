@@ -140,7 +140,7 @@ func (list List) SelectByBothNames(name string) List {
 	for i := range list {
 		if strings.Contains(strings.ToLower(list[i].NameEng), strings.ToLower(name)) {
 			newList = append(newList, list[i])
-		} else if strings.Contains(strings.ToLower(list[i].NameEng), strings.ToLower(name)) {
+		} else if strings.Contains(strings.ToLower(list[i].NameJap), strings.ToLower(name)) {
 			newList = append(newList, list[i])
 		}
 	}
