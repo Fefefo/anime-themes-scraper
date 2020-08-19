@@ -2,6 +2,7 @@ package scraper
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -11,6 +12,7 @@ import (
 // Anime is the struct which cointains the information about an anime
 type Anime struct {
 	IDAnime int
+	Year    int
 	NameJap string
 	NameEng string
 	MalLink string
@@ -53,6 +55,7 @@ func GetAnimeList() List {
 	})
 
 	d.OnHTML("div.md.wiki", func(e *colly.HTMLElement) {
+		year := []rune(e.DOM.Find("h2").Eq(1).Text())
 		element := e.DOM.Find("h3")
 		for i := 0; i < element.Length(); i++ {
 			el := element.Eq(i)
@@ -62,7 +65,7 @@ func GetAnimeList() List {
 			temp.IDAnime = count
 			temp.NameJap = el.Text()
 			temp.MalLink, _ = el.Attr("href")
-
+			temp.Year, _ = strconv.Atoi(string(year[0:4]))
 			el = el.Next()
 			if el.Is("p") {
 				temp.NameEng = el.Text()
