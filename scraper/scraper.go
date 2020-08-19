@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/gocolly/colly"
 )
@@ -33,29 +32,25 @@ type List []Anime
 
 //GetAnimeList returns an array of the Anime struct with all anime loaded
 func GetAnimeList() List {
-	c := colly.NewCollector()
-	d := colly.NewCollector()
+	c := colly.NewCollector(colly.MaxDepth(1), colly.Async())
+	d := colly.NewCollector(colly.MaxDepth(0), colly.Async())
 
 	count := 0
 
-	var wg sync.WaitGroup
 	var animeList List
 
 	c.OnHTML("div.md.wiki", func(e *colly.HTMLElement) {
+		el := e.DOM
+		for i := 0; i < el.Find("h3").Length(); i++ {
+			link, _ := el.Find("h3").Eq(i).Children().Eq(0).Attr("href")
+			linkAbs := "https://reddit.com" + link
 
-		for i := 1; i < e.DOM.Find("p").Length(); i++ {
-			link, _ := e.DOM.Find("p").Eq(i).Children().Eq(0).Attr("href")
-			linkAbs := "https://reddit.com" + strings.TrimSuffix(strings.Split(link, "#")[0], "/")
-
-			if vis, _ := d.HasVisited(linkAbs); !vis {
-				wg.Add(1)
-				go d.Visit(linkAbs)
-			}
+			d.Visit(linkAbs)
 		}
 	})
 
 	d.OnHTML("div.md.wiki", func(e *colly.HTMLElement) {
-		year := []rune(e.DOM.Find("h2").Eq(1).Text())
+		year := []rune(e.DOM.Find("h2").Eq(0).Text())
 		element := e.DOM.Find("h3")
 		for i := 0; i < element.Length(); i++ {
 			el := element.Eq(i)
@@ -100,13 +95,14 @@ func GetAnimeList() List {
 			animeList = append(animeList, temp)
 		}
 
-		wg.Done()
+		//wg.Done()
 		fmt.Println(count)
 	})
 
-	c.Visit("https://reddit.com/r/AnimeThemes/wiki/anime_index")
+	c.Visit("https://reddit.com/r/AnimeThemes/wiki/year_index")
+	c.Wait()
+	d.Wait()
 
-	wg.Wait()
 	return animeList
 }
 
