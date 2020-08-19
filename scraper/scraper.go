@@ -31,7 +31,12 @@ type animeSong struct {
 type List []Anime
 
 //GetAnimeList returns an array of the Anime struct with all anime loaded
-func GetAnimeList() List {
+func GetAnimeList(output ...bool) List {
+	out := false
+	if len(output) > 0 {
+		out = output[0]
+	}
+
 	c := colly.NewCollector(colly.MaxDepth(1), colly.Async())
 	d := colly.NewCollector(colly.MaxDepth(0), colly.Async())
 
@@ -95,8 +100,9 @@ func GetAnimeList() List {
 			animeList = append(animeList, temp)
 		}
 
-		//wg.Done()
-		fmt.Println(count)
+		if out {
+			fmt.Println(count)
+		}
 	})
 
 	c.Visit("https://reddit.com/r/AnimeThemes/wiki/year_index")
