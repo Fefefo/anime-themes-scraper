@@ -1,7 +1,9 @@
 # MoeScraper
 
 [moeScraper](https://github.com/Fefefo/moeScraper) is a scraping framework for Gophers.
+
 It scrapes [/r/AnimeThemes](https://www.reddit.com/r/AnimeThemes/), a simple and consistent repository of anime opening and ending themes.
+
 It uses [Colly](https://github.com/gocolly/colly)
 
 
