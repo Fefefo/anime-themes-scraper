@@ -12,7 +12,7 @@ It uses [Colly](https://github.com/gocolly/colly).
 
 ## Project using moeScraper
 
--  [t.me/fefegobot](https://github.com/Fefefo/goBot) Telegram bot where you can inline search any opening by english or japanese title
+-  [fefegobot](https://github.com/Fefefo/goBot) Telegram bot where you can inline search any opening by english or japanese title
 
 
 ## Structs
