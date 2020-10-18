@@ -19,7 +19,7 @@ type Anime struct {
 	Songs []animeSong
 }
 
-// animeSong is the stroct which contains the information about a theme
+// animeSong is the struct which contains the information about a theme
 type animeSong struct {
 	Title    string
 	Link     string
