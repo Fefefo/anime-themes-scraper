@@ -1,4 +1,4 @@
-# MoeScraper
+# Golang scraper for the [/r/AnimeThemes](https://www.reddit.com/r/AnimeThemes/)
 
 A scraping tool for Gophers which scrapes [/r/AnimeThemes](https://www.reddit.com/r/AnimeThemes/), a simple and consistent repository of anime opening and ending themes.
 
