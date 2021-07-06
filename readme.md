@@ -10,7 +10,7 @@ It uses [Colly](https://github.com/gocolly/colly).
 `go get github.com/Fefefo/anime-themes-scraper`
 
 
-## Project using moeScraper
+## Project using this repo
 
 -  [fefegobot](https://github.com/Fefefo/goBot) Telegram bot where you can inline search any opening by english or japanese title
 
