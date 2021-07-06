@@ -38,8 +38,8 @@ func GetAnimeList(output ...bool) List {
 		out = output[0]
 	}
 
-	c := colly.NewCollector(colly.MaxDepth(1), colly.Async())
-	d := colly.NewCollector(colly.MaxDepth(0), colly.Async())
+	c := colly.NewCollector(colly.MaxDepth(1), colly.Async(true))
+	d := colly.NewCollector(colly.MaxDepth(0), colly.Async(true))
 
 	count := 0
 
