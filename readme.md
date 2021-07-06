@@ -7,7 +7,7 @@ It uses [Colly](https://github.com/gocolly/colly).
 
 ## Installation
 
-`go get github.com/Fefefo/moeScraper`
+`go get github.com/Fefefo/anime-themes-scraper`
 
 
 ## Project using moeScraper
